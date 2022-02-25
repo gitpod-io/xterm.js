@@ -3,7 +3,7 @@
     "readinessProbe": {
         "type": "http",
         "http": {
-            "path": "server.js"
+            "path": "/"
         }
     }
 }
