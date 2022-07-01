@@ -19,7 +19,7 @@ function startServer() {
   var terminals = {},
       logs = {};
 
-  app.use('/xterm.css', express.static(__dirname + '/../css/xterm.css'));
+  app.use('/xterm.css', express.static(__dirname + '/xterm.css'));
   app.get('/logo.png', (req, res) => { // lgtm [js/missing-rate-limiting]
     res.sendFile(__dirname + '/logo.png');
   });
