@@ -48,7 +48,7 @@ function startServer() {
         name: 'xterm-256color',
         cols: cols || 80,
         rows: rows || 24,
-        cwd: process.platform === 'win32' ? undefined : env.PWD,
+        cwd: env.GITPOD_REPO_ROOT || env.PWD,
         env: env,
         encoding: USE_BINARY ? null : 'utf8'
       });
