@@ -143,8 +143,6 @@ const disposeRecreateButtonHandler = () => {
 
 createTerminal();
 document.getElementById("dispose").addEventListener("click", disposeRecreateButtonHandler);
-document.getElementById("load-test").addEventListener("click", loadTest);
-document.getElementById("add-decoration").addEventListener("click", addDecoration);
 
 function createTerminal(): void {
   // Clean terminal
@@ -204,8 +202,6 @@ function createTerminal(): void {
 
   // fit is called within a setTimeout, cols and rows need this.
   setTimeout(() => {
-    initOptions(term);
-
     // Set terminal size again to set the specific dimensions on the demo
     updateTerminalSize();
 
@@ -264,125 +260,6 @@ function runFakeTerminal(): void {
   });
 }
 
-function initOptions(term: TerminalType): void {
-  const blacklistedOptions = [
-    // Internal only options
-    "cancelEvents",
-    "convertEol",
-    "termName",
-    // Complex option
-    "theme",
-    "windowOptions",
-  ];
-  const stringOptions = {
-    bellSound: null,
-    bellStyle: ["none", "sound"],
-    cursorStyle: ["block", "underline", "bar"],
-    fastScrollModifier: ["alt", "ctrl", "shift", undefined],
-    fontFamily: null,
-    fontWeight: ["normal", "bold", "100", "200", "300", "400", "500", "600", "700", "800", "900"],
-    fontWeightBold: [
-      "normal",
-      "bold",
-      "100",
-      "200",
-      "300",
-      "400",
-      "500",
-      "600",
-      "700",
-      "800",
-      "900",
-    ],
-    logLevel: ["debug", "info", "warn", "error", "off"],
-    rendererType: ["dom", "canvas"],
-    wordSeparator: null,
-  };
-  const options = Object.getOwnPropertyNames(term.options);
-  const booleanOptions = [];
-  const numberOptions = [];
-  options
-    .filter((o) => blacklistedOptions.indexOf(o) === -1)
-    .forEach((o) => {
-      switch (typeof term.options[o]) {
-        case "boolean":
-          booleanOptions.push(o);
-          break;
-        case "number":
-          numberOptions.push(o);
-          break;
-        default:
-          if (Object.keys(stringOptions).indexOf(o) === -1) {
-            console.warn(`Unrecognized option: "${o}"`);
-          }
-      }
-    });
-
-  let html = "";
-  html += '<div class="option-group">';
-  booleanOptions.forEach((o) => {
-    html += `<div class="option"><label><input id="opt-${o}" type="checkbox" ${
-      term.options[o] ? "checked" : ""
-    }/> ${o}</label></div>`;
-  });
-  html += '</div><div class="option-group">';
-  numberOptions.forEach((o) => {
-    html += `<div class="option"><label>${o} <input id="opt-${o}" type="number" value="${
-      term.options[o]
-    }" step="${o === "lineHeight" || o === "scrollSensitivity" ? "0.1" : "1"}"/></label></div>`;
-  });
-  html += '</div><div class="option-group">';
-  Object.keys(stringOptions).forEach((o) => {
-    if (stringOptions[o]) {
-      html += `<div class="option"><label>${o} <select id="opt-${o}">${stringOptions[o]
-        .map((v) => `<option ${term.options[o] === v ? "selected" : ""}>${v}</option>`)
-        .join("")}</select></label></div>`;
-    } else {
-      html += `<div class="option"><label>${o} <input id="opt-${o}" type="text" value="${term.options[o]}"/></label></div>`;
-    }
-  });
-  html += "</div>";
-
-  const container = document.getElementById("options-container");
-  container.innerHTML = html;
-
-  // Attach listeners
-  booleanOptions.forEach((o) => {
-    const input = <HTMLInputElement>document.getElementById(`opt-${o}`);
-    addDomListener(input, "change", () => {
-      console.log("change", o, input.checked);
-      term.options[o] = input.checked;
-    });
-  });
-  numberOptions.forEach((o) => {
-    const input = <HTMLInputElement>document.getElementById(`opt-${o}`);
-    addDomListener(input, "change", () => {
-      console.log("change", o, input.value);
-      if (o === "cols" || o === "rows") {
-        updateTerminalSize();
-      } else if (o === "lineHeight") {
-        term.options.lineHeight = parseFloat(input.value);
-        updateTerminalSize();
-      } else if (o === "scrollSensitivity") {
-        term.options.scrollSensitivity = parseFloat(input.value);
-        updateTerminalSize();
-      } else if (o === "scrollback") {
-        term.options.scrollback = parseInt(input.value);
-        setTimeout(() => updateTerminalSize(), 5);
-      } else {
-        term.options[o] = parseInt(input.value);
-      }
-    });
-  });
-  Object.keys(stringOptions).forEach((o) => {
-    const input = <HTMLInputElement>document.getElementById(`opt-${o}`);
-    addDomListener(input, "change", () => {
-      console.log("change", o, input.value);
-      term.options[o] = input.value;
-    });
-  });
-}
-
 function initAddons(term: TerminalType): void {
   const fragment = document.createDocumentFragment();
   Object.keys(addons).forEach((name: AddonType) => {
@@ -403,19 +280,13 @@ function initAddons(term: TerminalType): void {
       if (checkbox.checked) {
         addon.instance = new addon.ctor();
         term.loadAddon(addon.instance);
-        if (name === "webgl") {
-          setTimeout(() => {
-            document.body.appendChild((addon.instance as WebglAddon).textureAtlas);
-          }, 0);
-        } else if (name === 'unicode11') {
-          term.unicode.activeVersion = '11';
+        if (name === "unicode11") {
+          term.unicode.activeVersion = "11";
         } else if (name === 'search') {
           addon.instance.onDidChangeResults(e => updateFindResults(e));
         }
       } else {
-        if (name === "webgl") {
-          document.body.removeChild((addon.instance as WebglAddon).textureAtlas);
-        } else if (name === "unicode11") {
+        if (name === "unicode11") {
           term.unicode.activeVersion = "6";
         }
         addon.instance!.dispose();
@@ -459,55 +330,3 @@ function updateTerminalSize(): void {
 }
 
 window.onresize = () => updateTerminalSize();
-
-function loadTest() {
-  const isWebglEnabled = !!addons.webgl.instance;
-  const testData = [];
-  let byteCount = 0;
-  for (let i = 0; i < 50; i++) {
-    const count = 1 + Math.floor(Math.random() * 79);
-    byteCount += count + 2;
-    const data = new Uint8Array(count + 2);
-    data[0] = 0x0a; // \n
-    for (let i = 1; i < count + 1; i++) {
-      data[i] = 0x61 + Math.floor(Math.random() * (0x7a - 0x61));
-    }
-    // End each line with \r so the cursor remains constant, this is what ls/tree do and improves
-    // performance significantly due to the cursor DOM element not needing to change
-    data[data.length - 1] = 0x0d; // \r
-    testData.push(data);
-  }
-  const start = performance.now();
-  for (let i = 0; i < 1024; i++) {
-    for (const d of testData) {
-      term.write(d);
-    }
-  }
-  // Wait for all data to be parsed before evaluating time
-  term.write("", () => {
-    const time = Math.round(performance.now() - start);
-    const mbs = ((byteCount / 1024) * (1 / (time / 1000))).toFixed(2);
-    term.write(
-      `\n\r\nWrote ${byteCount}kB in ${time}ms (${mbs}MB/s) using the (${
-        isWebglEnabled ? "webgl" : "canvas"
-      } renderer)`
-    );
-    // Send ^C to get a new prompt
-    term._core._onData.fire("\x03");
-  });
-}
-
-function addDecoration() {
-  term.options['overviewRulerWidth'] = 15;
-  const marker = term.addMarker(1);
-  const decoration = term.registerDecoration({
-    marker,
-    backgroundColor: '#00FF00',
-    foregroundColor: '#00FE00',
-    overviewRulerOptions: { color: '#ef292980', position: 'left' }
-  });
-  decoration.onRender((e: HTMLElement) => {
-    e.style.right = '100%';
-    e.style.backgroundColor = '#ef292980';
-  });
-}
