@@ -14,27 +14,27 @@
       <div id="grid">
         <div id="terminal-container"></div>
       </div>
-      <div id="grid">
-        <div class="tab">
-          <button id="addonsbutton" class="tabLinks" onclick="openSection(event, 'addons')">Addons</button>
-        </div>
-        <div id="addons" class="tabContent">
-          <h3>Addons</h3>
-          <p>Addons can be loaded and unloaded on a particular terminal to extend its functionality.</p>
-          <div id="addons-container"></div>
-          <h3>Addons Control</h3>
-          <h4>SearchAddon</h4>
-          <div style= "display:flex; flex-direction:column;">
-            <label>Find next <input id="find-next"/></label>
-            <label>Find previous <input id="find-previous"/></label>
-            <div>Results: <span id="find-results"></span></div>
-            <label><input type="checkbox" id="regex"/>Use regex</label>
-            <label><input type="checkbox" id="case-sensitive"/>Case sensitive</label>
-            <label><input type="checkbox" id="whole-word"/>Whole word</label>
-            <label><input type="checkbox" id="highlight-all-matches" checked/>Highlight All Matches</label>
+        <dialog>
+          <div id="addons" class="tabContent">
+            <h3>Addons</h3>
+            <p>Addons can be loaded and unloaded on a particular terminal to extend its functionality.</p>
+            <div id="addons-container"></div>
+            <h3>Addons Control</h3>
+            <h4>SearchAddon</h4>
+            <div style= "display:flex; flex-direction:column;">
+              <label>Find next <input id="find-next"/></label>
+              <label>Find previous <input id="find-previous"/></label>
+              <div>Results: <span id="find-results"></span></div>
+              <label><input type="checkbox" id="regex"/>Use regex</label>
+              <label><input type="checkbox" id="case-sensitive"/>Case sensitive</label>
+              <label><input type="checkbox" id="whole-word"/>Whole word</label>
+              <label><input type="checkbox" id="highlight-all-matches" checked/>Highlight All Matches</label>
+            </div>
           </div>
-        </div>
-      </div>
+          <form method="dialog">
+            <button>Close</button>
+          </form>
+        </dialog>
     </div>
       <script type="text/javascript" src="/_supervisor/frontend/main.js" charset="utf-8"></script>
       <script src="dist/client-bundle.js" defer ></script>

@@ -17,7 +17,6 @@ import { WebglAddon } from "../addons/xterm-addon-webgl/out/WebglAddon";
 import { Unicode11Addon } from "../addons/xterm-addon-unicode11/out/Unicode11Addon";
 import { LigaturesAddon } from "../addons/xterm-addon-ligatures/out/LigaturesAddon";
 
-// Use webpacked version (yarn package)
 // import { Terminal } from '../lib/xterm';
 // import { AttachAddon } from 'xterm-addon-attach';
 // import { FitAddon } from 'xterm-addon-fit';
@@ -89,9 +88,9 @@ const addons: { [T in AddonType]: IDemoAddon<T> } = {
   attach: { name: "attach", ctor: AttachAddon, canChange: false },
   fit: { name: "fit", ctor: FitAddon, canChange: false },
   search: { name: "search", ctor: SearchAddon, canChange: true },
-  "web-links": { name: "web-links", ctor: WebLinksAddon, canChange: true },
+  "web-links": { name: "web-links", ctor: WebLinksAddon, canChange: false },
   webgl: { name: "webgl", ctor: WebglAddon, canChange: true },
-  unicode11: { name: "unicode11", ctor: Unicode11Addon, canChange: true },
+  unicode11: { name: "unicode11", ctor: Unicode11Addon, canChange: false },
   ligatures: { name: "ligatures", ctor: LigaturesAddon, canChange: true },
 };
 
@@ -120,29 +119,7 @@ function getSearchOptions(e: KeyboardEvent): ISearchOptions {
   };
 }
 
-const disposeRecreateButtonHandler = () => {
-  // If the terminal exists dispose of it, otherwise recreate it
-  if (term) {
-    term.dispose();
-    term = null;
-    window.term = null;
-    socket = null;
-    addons.attach.instance = undefined;
-    addons.fit.instance = undefined;
-    addons.search.instance = undefined;
-    addons.unicode11.instance = undefined;
-    addons.ligatures.instance = undefined;
-    addons["web-links"].instance = undefined;
-    addons.webgl.instance = undefined;
-    document.getElementById("dispose").innerHTML = "Recreate Terminal";
-  } else {
-    createTerminal();
-    document.getElementById("dispose").innerHTML = "Dispose terminal";
-  }
-};
-
 createTerminal();
-document.getElementById("dispose").addEventListener("click", disposeRecreateButtonHandler);
 
 function createTerminal(): void {
   // Clean terminal
