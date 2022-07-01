@@ -143,6 +143,8 @@ function startServer() {
   app.listen(port, host);
 }
 
-startServer()
+if (require.main === module) {
+  startServer()
+}
 
-//module.exports = startServer;
+module.exports = startServer;
