@@ -14,17 +14,16 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/fetch/1.0.0/fetch.min.js"></script>
   </head>
   <body>
-    <h1 style="color: #2D2E2C">xterm.js: A terminal for the <em style="color: #5DA5D5">web</em></h1>
+    <h1 style="color: #2D2E2C">xterm.js: Gitpod's fastest IDE</h1>
     <div id="container">
       <div id="grid">
         <div id="terminal-container"></div>
       </div>
       <div id="grid">
         <div class="tab">
-          <button id= "optionsbutton" class="tabLinks" onclick="openSection(event, 'options')">Options</button>
-          <button id= "addonsbutton" class="tabLinks" onclick="openSection(event, 'addons')">Addons</button>
-          <button id= "stylebutton" class="tabLinks" onclick="openSection(event, 'style')">Style</button>
-          <button id= "testbutton" class="tabLinks" onclick="openSection(event, 'test')">Test</button>
+          <button id="optionsbutton" class="tabLinks" onclick="openSection(event, 'options')">Options</button>
+          <button id="addonsbutton" class="tabLinks" onclick="openSection(event, 'addons')">Addons</button>
+          <button id="testbutton" class="tabLinks" onclick="openSection(event, 'test')">Test</button>
         </div>
         <div id="options" class="tabContent">
           <h3>Options</h3>
@@ -46,42 +45,13 @@
             <label><input type="checkbox" id="whole-word"/>Whole word</label>
             <label><input type="checkbox" id="highlight-all-matches" checked/>Highlight All Matches</label>
           </div>
-          <h4>SerializeAddon</h4>
-          <div>
-            <button id="serialize">Serialize the content of terminal</button>
-            <label><input type="checkbox" id="write-to-terminal">Write back to terminal</label>
-            <div><pre id="serialize-output"></pre></div>
-
-            <button id="htmlserialize">Serialize the content of terminal in HTML</button>
-            <span id="htmlserialize-output-result"></span>
-            <div><pre id="htmlserialize-output"></pre></div>
-          </div>
-        </div>
-        <div id="style" class="tabContent">
-          <h3>Style</h3>
-          <div style="display: inline-block; margin-right: 16px;">
-            <label for="padding">Padding</label>
-            <input type="number" id="padding" />
-          </div>
         </div>
         <div id="test" class="tabContent">
           <h3>Test</h3>
           <div style="display: inline-block; margin-right: 16px;">
-            <dl>
-              <dt>Lifecycle</dt>
-              <dd><button id="dispose" title="This is used to testing memory leaks">Dispose terminal</button></dd>
-
-              <dt>Performance</dt>
-              <dd><button id="load-test" title="Write several MB of data to simulate a lot of data coming from the process">Load test</button></dd>
-
-              <dt>Styles</dt>
-              <dd><button id="custom-glyph" title="Write custom box drawing and block element characters to the terminal">Test custom glyphs</button></dd>
-              <dd><button id="powerline-symbol-test" title="Write powerline symbol characters to the terminal (\ue0a0+)">Powerline symbol test</button></dd>
-
-              <dt>Decorations</dt>
-              <dd><button id="add-decoration" title="Add a decoration to the terminal">Decoration</button></dd>
-              <dd><button id="add-overview-ruler" title="Add an overview ruler to the terminal">Add Overview Ruler</button></dd>
-            </dl>
+            <button id="dispose" title="This is used to testing memory leaks">Dispose terminal</button>
+            <button id="load-test" title="Write several MB of data to simulate a lot of data coming from the process">Load test</button>
+            <button id="add-decoration" title="Add a decoration to the terminal">Decoration</button>
           </div>
         </div>
       </div>

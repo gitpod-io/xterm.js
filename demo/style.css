@@ -90,3 +90,8 @@ pre {
     max-height: 100vh;
     overflow-y: auto;
 }
+
+#terminal-container {
+    min-width: 80vw;
+    min-height: 60vh;
+}
