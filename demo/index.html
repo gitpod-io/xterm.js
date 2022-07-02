@@ -38,36 +38,5 @@
     </div>
       <script type="text/javascript" src="/_supervisor/frontend/main.js" charset="utf-8"></script>
       <script src="dist/client-bundle.js" defer ></script>
-      <script>
-      var tab = localStorage.getItem("tab");
-
-        if(tab === null){
-            document.getElementById("options").style.display = "block";
-            document.getElementById("optionsbutton").classList.add("active");
-        }
-        else {
-          const tabContent = document.getElementsByClassName("tabContent");
-          let itr;
-          for (itr = 0; itr < tabContent.length; itr+=1) {
-            tabContent[itr].style.display = "none";
-          }
-          document.getElementById(""+tab+"").style.display = "block";
-          document.getElementById(""+tab+"button").classList.add("active");
-        }
-        function openSection(event, section) {
-          const tabContent = document.getElementsByClassName("tabContent");
-          let itr;
-          for (itr = 0; itr < tabContent.length; itr+=1) {
-            tabContent[itr].style.display = "none";
-          }
-          const tabLinks = document.getElementsByClassName("tabLinks");
-          for (itr = 0; itr < tabLinks.length; itr+=1) {
-            tabLinks[itr].className = tabLinks[itr].className.replace(" active", "");
-          }
-          document.getElementById(section).style.display = "block";
-          localStorage.setItem("tab", section);
-          event.currentTarget.className += " active";
-        }
-      </script>
     </body>
 </html>
