@@ -152,13 +152,13 @@ function createTerminal(): void {
     }
     const cols = size.cols;
     const rows = size.rows;
-    const url = "/terminals/" + pid + "/size?cols=" + cols + "&rows=" + rows;
+    const url = `/terminals/${pid}/size?cols=${cols}&rows=${rows}`;
 
     fetch(url, { method: "POST" });
   });
   protocol = location.protocol === "https:" ? "wss://" : "ws://";
   socketURL =
-    protocol + location.hostname + (location.port ? ":" + location.port : "") + "/terminals/";
+    `${protocol + location.hostname + (location.port ? ":" + location.port : "")}/terminals/`;
 
   term.open(terminalContainer);
   addons.fit.instance!.fit();
@@ -182,17 +182,30 @@ function createTerminal(): void {
     // Set terminal size again to set the specific dimensions on the demo
     updateTerminalSize();
 
-    fetch("/terminals?cols=" + term.cols + "&rows=" + term.rows, { method: "POST" }).then((res) => {
+    fetch(`/terminals?cols=${term.cols}&rows=${term.rows}`, { method: "POST" }).then((res) => {
       res.text().then((processId) => {
         pid = processId;
         socketURL += processId;
         socket = new WebSocket(socketURL);
         socket.onopen = runRealTerminal;
-        socket.onclose = runFakeTerminal;
-        socket.onerror = runFakeTerminal;
+        socket.onclose = handleDisconected;
+        socket.onerror = handleDisconected;
       });
     });
   }, 0);
+}
+
+function handleDisconected (e: CloseEvent) {
+  console.error(e);
+  switch (e.code) {
+    case 1006:
+      if (navigator.onLine) {
+        alert("Cannot reach workspace, consider reloading");
+      } else {
+        alert("You are offline, please connect to the internet and refresh this page");
+      }
+      break;
+  }
 }
 
 function runRealTerminal(): void {
@@ -200,41 +213,6 @@ function runRealTerminal(): void {
   term.loadAddon(addons.attach.instance);
   term._initialized = true;
   initAddons(term);
-}
-
-function runFakeTerminal(): void {
-  if (term._initialized) {
-    return;
-  }
-
-  term._initialized = true;
-  initAddons(term);
-
-  term.prompt = () => {
-    term.write("\r\n$ ");
-  };
-
-  term.writeln("Welcome to xterm.js");
-  term.writeln("This is a local terminal emulation, without a real terminal in the back-end.");
-  term.writeln("Type some keys and commands to play around.");
-  term.writeln("");
-  term.prompt();
-
-  term.onKey((e: { key: string; domEvent: KeyboardEvent }) => {
-    const ev = e.domEvent;
-    const printable = !ev.altKey && !ev.ctrlKey && !ev.metaKey;
-
-    if (ev.keyCode === 13) {
-      term.prompt();
-    } else if (ev.keyCode === 8) {
-      // Do not delete the prompt
-      if (term._core.buffer.x > 2) {
-        term.write("\b \b");
-      }
-    } else if (printable) {
-      term.write(e.key);
-    }
-  });
 }
 
 function initAddons(term: TerminalType): void {
