@@ -1,42 +1,45 @@
-<!doctype html>
+<!DOCTYPE html>
 <html>
   <head>
     <title>Gitpod</title>
-    <link rel="shortcut icon" type="image/png" href="/logo.png">
+    <link rel="shortcut icon" type="image/png" href="/logo.png" />
     <link rel="stylesheet" href="/xterm.css" />
     <link rel="stylesheet" href="/style.css" />
     <script src="https://cdnjs.cloudflare.com/ajax/libs/es6-promise/4.1.1/es6-promise.auto.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/fetch/1.0.0/fetch.min.js"></script>
   </head>
   <body>
-    <h1 style="color: #2D2E2C">xterm.js: Gitpod's fastest IDE</h1>
-    <div id="container">
-      <div id="grid">
-        <div id="terminal-container"></div>
+    <div id="terminal-container"></div>
+
+    <dialog>
+      <div id="addons" class="tabContent">
+        <h3>Addons</h3>
+        <p>
+          Addons can be loaded and unloaded on a particular terminal to extend
+          its functionality.
+        </p>
+        <div id="addons-container"></div>
+        <h3>Addons Control</h3>
+        <h4>SearchAddon</h4>
+        <div style="display: flex; flex-direction: column">
+          <label>Find next <input id="find-next" /></label>
+          <label>Find previous <input id="find-previous" /></label>
+          <label><input type="checkbox" id="regex" />Use regex</label>
+          <label
+            ><input type="checkbox" id="case-sensitive" />Case sensitive</label
+          >
+          <label><input type="checkbox" id="whole-word" />Whole word</label>
+        </div>
       </div>
-        <dialog>
-          <div id="addons" class="tabContent">
-            <h3>Addons</h3>
-            <p>Addons can be loaded and unloaded on a particular terminal to extend its functionality.</p>
-            <div id="addons-container"></div>
-            <h3>Addons Control</h3>
-            <h4>SearchAddon</h4>
-            <div style= "display:flex; flex-direction:column;">
-              <label>Find next <input id="find-next"/></label>
-              <label>Find previous <input id="find-previous"/></label>
-              <div>Results: <span id="find-results"></span></div>
-              <label><input type="checkbox" id="regex"/>Use regex</label>
-              <label><input type="checkbox" id="case-sensitive"/>Case sensitive</label>
-              <label><input type="checkbox" id="whole-word"/>Whole word</label>
-              <label><input type="checkbox" id="highlight-all-matches" checked/>Highlight All Matches</label>
-            </div>
-          </div>
-          <form method="dialog">
-            <button>Close</button>
-          </form>
-        </dialog>
-    </div>
-      <script type="text/javascript" src="/_supervisor/frontend/main.js" charset="utf-8"></script>
-      <script src="dist/client-bundle.js" defer ></script>
-    </body>
+      <form method="dialog">
+        <button>Close</button>
+      </form>
+    </dialog>
+    <script
+      type="text/javascript"
+      src="/_supervisor/frontend/main.js"
+      charset="utf-8"
+    ></script>
+    <script src="dist/client-bundle.js" defer></script>
+  </body>
 </html>
