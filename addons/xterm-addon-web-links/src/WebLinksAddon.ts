@@ -34,7 +34,18 @@ function handleLink(event: MouseEvent, uri: string): void {
     } catch {
       // no-op, Electron can throw
     }
-    newWindow.location.href = uri;
+
+    const uriToOpen = new URL(uri);
+    const localHostnames = ['0.0.0.0', 'localhost', '127.0.0.1'];
+
+    const shouldRewrite = localHostnames.indexOf(uriToOpen.hostname) !== -1;
+
+    const workspaceUrl = new URL(location.href).hostname.replace(/\d{1,5}-/, '');
+    uriToOpen.protocol = 'https:';
+    uriToOpen.hostname = `${uriToOpen.port}-${workspaceUrl}`;
+    uriToOpen.port = '';
+
+    newWindow.location.href = shouldRewrite ? uriToOpen.toString() : uri;
   } else {
     console.warn('Opening link blocked as opener could not be cleared');
   }
