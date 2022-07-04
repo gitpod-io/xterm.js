@@ -198,6 +198,10 @@ function createTerminal(): void {
 function handleDisconected (e: CloseEvent) {
   console.error(e);
   switch (e.code) {
+    case 1005:
+      if (confirm("For some reason the WebSocket closed. Reload?")) {
+        location.reload();
+      }
     case 1006:
       if (navigator.onLine) {
         alert("Cannot reach workspace, consider reloading");
