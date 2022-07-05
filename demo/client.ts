@@ -16,6 +16,7 @@ import { WebLinksAddon } from "../addons/xterm-addon-web-links/out/WebLinksAddon
 import { WebglAddon } from "../addons/xterm-addon-webgl/out/WebglAddon";
 import { Unicode11Addon } from "../addons/xterm-addon-unicode11/out/Unicode11Addon";
 import { LigaturesAddon } from "../addons/xterm-addon-ligatures/out/LigaturesAddon";
+import ReconnectingWebSocket from 'reconnecting-websocket';
 
 // import { Terminal } from '../lib/xterm';
 // import { AttachAddon } from 'xterm-addon-attach';
@@ -186,7 +187,10 @@ function createTerminal(): void {
       res.text().then((processId) => {
         pid = processId;
         socketURL += processId;
-        socket = new WebSocket(socketURL);
+        socket = new ReconnectingWebSocket(socketURL, [], {
+          connectionTimeout: 1000,
+          maxRetries: 20,
+        });
         socket.onopen = runRealTerminal;
         socket.onclose = handleDisconected;
         socket.onerror = handleDisconected;
