@@ -128,11 +128,13 @@ function startServer() {
       term.write(msg);
     });
     ws.on('close', function () {
+      /*
       term.kill();
       console.log('Closed terminal ' + term.pid);
       // Clean things up
       delete terminals[term.pid];
       delete logs[term.pid];
+      */
     });
   });
 
