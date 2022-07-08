@@ -120,6 +120,21 @@ function getSearchOptions(e: KeyboardEvent): ISearchOptions {
   };
 }
 
+const outputDialog = document.getElementById("output");
+const outputContent = document.getElementById("outputContent")
+function output(message: string) {
+  //@ts-ignore
+  if (typeof outputDialog.showModal === "function") {
+    outputContent.innerText= message;
+    //@ts-ignore
+    outputDialog.showModal();
+  } else {
+    // Not supported
+  }
+}
+
+globalThis.output = output
+
 createTerminal();
 
 function createTerminal(): void {
@@ -208,9 +223,9 @@ function handleDisconected (e: CloseEvent) {
       }
     case 1006:
       if (navigator.onLine) {
-        alert("Cannot reach workspace, consider reloading");
+        output("Cannot reach workspace, consider reloading");
       } else {
-        alert("You are offline, please connect to the internet and refresh this page");
+        output("You are offline, please connect to the internet and refresh this page");
       }
       break;
   }
