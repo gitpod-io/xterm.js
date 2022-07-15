@@ -56,33 +56,33 @@ interface IDemoAddon<T extends AddonType> {
   name: T;
   canChange: boolean;
   ctor: T extends "attach"
-    ? typeof AttachAddon
-    : T extends "fit"
-    ? typeof FitAddon
-    : T extends "search"
-    ? typeof SearchAddon
-    : T extends "web-links"
-    ? typeof WebLinksAddon
-    : T extends "unicode11"
-    ? typeof Unicode11Addon
-    : T extends "ligatures"
-    ? typeof LigaturesAddon
-    : typeof WebglAddon;
+  ? typeof AttachAddon
+  : T extends "fit"
+  ? typeof FitAddon
+  : T extends "search"
+  ? typeof SearchAddon
+  : T extends "web-links"
+  ? typeof WebLinksAddon
+  : T extends "unicode11"
+  ? typeof Unicode11Addon
+  : T extends "ligatures"
+  ? typeof LigaturesAddon
+  : typeof WebglAddon;
   instance?: T extends "attach"
-    ? AttachAddon
-    : T extends "fit"
-    ? FitAddon
-    : T extends "search"
-    ? SearchAddon
-    : T extends "web-links"
-    ? WebLinksAddon
-    : T extends "webgl"
-    ? WebglAddon
-    : T extends "unicode11"
-    ? typeof Unicode11Addon
-    : T extends "ligatures"
-    ? typeof LigaturesAddon
-    : never;
+  ? AttachAddon
+  : T extends "fit"
+  ? FitAddon
+  : T extends "search"
+  ? SearchAddon
+  : T extends "web-links"
+  ? WebLinksAddon
+  : T extends "webgl"
+  ? WebglAddon
+  : T extends "unicode11"
+  ? typeof Unicode11Addon
+  : T extends "ligatures"
+  ? typeof LigaturesAddon
+  : never;
 }
 
 const addons: { [T in AddonType]: IDemoAddon<T> } = {
@@ -122,14 +122,17 @@ function getSearchOptions(e: KeyboardEvent): ISearchOptions {
 
 const outputDialog = document.getElementById("output");
 const outputContent = document.getElementById("outputContent")
-function output(message: string) {
+function output(message: string, options?: { formActions: HTMLInputElement[] | HTMLButtonElement[] }) {
   //@ts-ignore
   if (typeof outputDialog.showModal === "function") {
-    outputContent.innerText= message;
+    outputContent.innerText = message;
+    if (options?.formActions) {
+      for (const action of options.formActions) {
+        outputDialog.querySelector("form").appendChild(action);
+      }
+    }
     //@ts-ignore
     outputDialog.showModal();
-  } else {
-    // Not supported
   }
 }
 
@@ -214,16 +217,18 @@ function createTerminal(): void {
   }, 0);
 }
 
-function handleDisconected (e: CloseEvent) {
+const reloadButton = document.createElement("button");
+reloadButton.innerText = "Reload";
+reloadButton.onclick = () => location.reload();
+
+function handleDisconected(e: CloseEvent) {
   console.error(e);
   switch (e.code) {
     case 1005:
-      if (confirm("For some reason the WebSocket closed. Reload?")) {
-        location.reload();
-      }
+      output("For some reason the WebSocket closed. Reload?", { formActions: [reloadButton] })
     case 1006:
       if (navigator.onLine) {
-        output("Cannot reach workspace, consider reloading");
+        output("Cannot reach workspace, consider reloading", { formActions: [reloadButton] });
       } else {
         output("You are offline, please connect to the internet and refresh this page");
       }
